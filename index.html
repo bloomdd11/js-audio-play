@@ -13,10 +13,23 @@
     hello
     <br>
     <div id="demo"></div>
+    <form name="form">
+        <div>
+            <span class="playStart">00:00</span>
+            <input type="range" name="playRange" value="0" style="width: 400px;">
+            <span class="playEnd">00:00</span>
+        </div>
+        <div>
+            <span class="volumeDown">0</span>
+            <input type="range" name="volumeRange" value="5">
+            <span class="volumeUp">100</span>
+        </div>
+    </form>
     <br>
     <button class="next">Next</button>
     <button class="pre">Pre</button>
     <button class="loop">No loop</button>
+    <button class="shuffle">Shuffle Off</button>
     <button class="playandpause">One Button</button>
     <script src="./index.js"></script>
 </body>
