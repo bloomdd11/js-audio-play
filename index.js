@@ -4,7 +4,7 @@ let pre = document.querySelector('.pre');
 let playpause = document.querySelector('.playandpause');
 let loop = document.querySelector('.loop');
 let shuffle = document.querySelector('.shuffle');
-let demo = document.querySelector('#demo');
+/* let demo = document.querySelector('#demo'); */
 
 let playRange = document.querySelector('form input[name="playRange"]');
 let playStart = document.querySelector('.playStart');
@@ -32,8 +32,8 @@ let loopTrack = {
 // create audio element
 let audio = document.createElement('audio');
 audio.setAttribute('controls', false)
-demo.appendChild(audio);
-// set list of audio
+    /* demo.appendChild(audio); */
+    // set list of audio
 let audioTrack = {
     0: {
         path: './data/Clean Bandit - Rockabye (Lyrics) feat. Sean Paul _ Anne-Marie(MP3_128K).mp3'
@@ -43,6 +43,15 @@ let audioTrack = {
     },
     2: {
         path: './data/y2meta.com - KALEO - Way Down We Go (Official Music Video) (128 kbps).mp3'
+    },
+    3: {
+        path: './data/mikeposner-itookapillinlbiza.mp3'
+    },
+    4: {
+        path: './data/avicii-thenights.mp3'
+    },
+    5: {
+        path: './data/avicii-waitingforlove.mp3'
     }
 };
 
@@ -72,6 +81,7 @@ function setAudioSrc(id) {
     audio.load();
     audio.src = audioTrack[id]['path'];
     playRange.value = 0;
+    console.log(id, audio.src)
 }
 
 // play and pause audio
@@ -171,12 +181,12 @@ function doShuffle() {
 function shuffleAudio() {
     shuffleArray = [];
     let copyArray = [...Object.keys(audioTrack)];
-    for (let i = 0; i < copyArray.length + 1; i++) {
+    for (let i = copyArray.length; i > 0; i--) {
         let shuffleId = Math.floor(Math.random() * copyArray.length);
         shuffleArray.push(copyArray[shuffleId]);
         copyArray.splice(shuffleId, 1);
     }
-    shuffleArray.push(copyArray[0]);
+    console.log(shuffleArray);
     return shuffleArray;
 }
 
