@@ -4,6 +4,7 @@ let pre = document.querySelector('.pre');
 let playpause = document.querySelector('.playandpause');
 let loop = document.querySelector('.loop');
 let shuffle = document.querySelector('.shuffle');
+let bgChange = document.querySelector('.bgChange');
 /* let demo = document.querySelector('#demo'); */
 
 let playRange = document.querySelector('form input[name="playRange"]');
@@ -20,6 +21,9 @@ let audioID = 0;
 let loopID = 0;
 let playTime = 0;
 let shuffleOn = false;
+let loopOneOn = false;
+let loopOffOn = true;
+let loopAllOn = false;
 let shuffleArray = [];
 
 // set loop config
@@ -75,6 +79,7 @@ loop.addEventListener('click', loopAudio);
 shuffle.addEventListener('click', doShuffle);
 playRange.addEventListener('click', rangeChangeUpdate);
 volumeRange.addEventListener('click', volumeChangeUpdate);
+bgChange.addEventListener('click', randomBgColor)
 
 // set src for playTrack
 function setAudioSrc(id) {
@@ -143,16 +148,37 @@ function loopAudio() {
     switch (loopID) {
         case 0:
             loop.textContent = 'No loop';
+            if (!loopOffOn) { // if loop off off -> on
+                loopOffOn = true;
+            }
+            loopOneOn = false; // loop one off
+            loopAllOn = false; // loop all off
             break;
         case 1:
             loop.textContent = 'loop 1';
-            audio.addEventListener('ended', loopOne);
+            if (!loopOneOn) { // if loop one off -> on
+                loopOneOn = true;
+            }
+            loopOffOn = false; // loop off off
+            loopAllOn = false; // loop all off
             break;
         case 2:
             loop.textContent = 'loop all';
-            loopAll();
+
+            if (!loopAllOn) { // if loop all off -> on
+                loopAllOn = true;
+            }
+            loopOffOn = false; // loop off off
+            loopOneOn = false; // loop one off
             break;
     }
+    let offSwitch = loopOffOn && (!loopOneOn) && (!loopAllOn);
+    let oneSwitch = (!loopOffOn) && (loopOneOn) && (!loopAllOn);
+    let allSwitch = (!loopOffOn) && (!loopOneOn) && (loopAllOn);
+
+    if (offSwitch) return;
+    if (oneSwitch) audio.addEventListener('ended', loopOne);
+    if (allSwitch) loopAll();
 }
 
 // loop one
@@ -171,9 +197,11 @@ function doShuffle() {
     if (!shuffleOn) {
         shuffle.textContent = 'Shuffle On';
         shuffleOn = true;
+        if (loopOneOn) return loopOneOn = true;
     } else {
         shuffle.textContent = 'Shuffle Off';
         shuffleOn = false;
+        if (loopOneOn) return loopOneOn = true;
     }
     playShuffleAudio();
 };
@@ -191,8 +219,12 @@ function shuffleAudio() {
 }
 
 function playShuffleAudio() {
-    shuffleAudio();
-    audio.addEventListener('ended', nextAudio);
+    if (shuffleOn) {
+        shuffleAudio();
+        audio.addEventListener('ended', nextAudio);
+    } else {
+        loopAudio();
+    }
 }
 
 // update current time
